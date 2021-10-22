@@ -19,6 +19,7 @@ import enumerate.Action;
 // MCTS Node
 import RHEA.sampleOLMCTS.SingleTreeNode;
 
+// modify by init.sh
 public class Population {
 
 	private Individual[] population;
@@ -391,11 +392,9 @@ public class Population {
 															// promoted through
 															// elitism are
 															// copied directly
-				//保存最好的几个
 				nextGenome[i] = population[i].copy();
 			} else {
 				// System.out.println("pop size:"+population.length);
-				//找一个容器
 				Individual newInd = population[0].copy();
 
 				// Crossover
@@ -410,7 +409,6 @@ public class Population {
 				nCalls += evaluate(newInd, gi, false);
 
 				// Insert new individual into population
-				//如果大于1个就赋值
 				if (!params.isRMHC())
 					nextGenome[i] = newInd;
 				else {
@@ -488,7 +486,6 @@ public class Population {
 //				System.out.println("f_score:" + f_score + ", diversity:" + diversityScore);
 //				diversityScore = (1 - params.D) * f_score + params.D * diversityScore;
 				diversityScore /= population.length - 1;
-				//更新分数
 				System.out.println("totalDiver:" +  diversityScore);
 			
 				aGenome.updateDiversityScore(diversityScore);
@@ -556,8 +553,6 @@ public class Population {
 		Individual newInd = new Individual(player.start_nActions, player.random, heuristic, player, agent);
 		Individual[] parents = new Individual[params.NO_PARENTS];
 		Random rand = new Random();
-		// Get parents for crossover. Tournament if possible.选父母
-		//这里可以调？？？
 		if (params.canTournament()) {
 			int index = 0;
 			Arrays.sort(population);
@@ -593,7 +588,6 @@ public class Population {
 		}
 
 		// Perform crossover, return resulting individual
-		//随机进行交叉配对
 		if (params.CROSSOVER_TYPE == POINT1_CROSS) {
 			// 1-point
 			int p = player.random.nextInt(params.SIMULATION_DEPTH - 3) + 1;

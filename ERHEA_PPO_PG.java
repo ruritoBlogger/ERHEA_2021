@@ -7,7 +7,9 @@ import enumValue.GameMode;
 import enumerate.Action;
 import struct.FrameData;
 import struct.GameData;
+// modify by init.sh
 import struct.Key;
+import struct.ScreenData;
 
 import org.apache.log4j.BasicConfigurator;
 
@@ -210,5 +212,18 @@ public class ERHEA_PPO_PG implements AIInterface {
 		
         
 	}
+
+    	// modify by init.sh
+    @Override
+    public void getInformation(FrameData frameData) {
+
+    }
+
+    @Override
+    public void getScreenData(ScreenData sd) {
+        AIInterface.super.getScreenData(sd);
+    }
+
+
 
 }

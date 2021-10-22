@@ -455,4 +455,17 @@ public class EmcmAiMaxMinusOne implements AIInterface {
 		AllTime = 0;
 	}
 
+	// modify by init.sh
+    @Override
+    public void getInformation(FrameData frameData) {
+
+    }
+
+    @Override
+    public void getScreenData(ScreenData sd) {
+        AIInterface.super.getScreenData(sd);
+    }
+
+
+
 }
