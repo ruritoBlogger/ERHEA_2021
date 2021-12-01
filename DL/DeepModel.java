@@ -128,8 +128,8 @@ public class DeepModel {
 			float reward_sel = 0;
 			float reward_opp = 0;
 
-			float lambda = 0.8f;
-			int lambda_len = 3;
+			float lambda = 0f;
+			int lambda_len = 7;
 
 			float[] opp_lambda = new float[lambda_len];
 			float[] sel_lambda = new float[lambda_len];
@@ -203,6 +203,47 @@ public class DeepModel {
 					opp_lambda[2] = 0;
 					sel_lambda[2] = 0;
 				}
+
+				if (i < batch_size - 4) {
+					opp_lambda[3] = opp_dp[batch_size - 1 - i] - opp_dp[batch_size - 5 - i]
+							+ (float) (Math.pow(discount, 4)) * targets_opp[i + 1];
+					sel_lambda[3] = sel_dp[batch_size - 1 - i] - sel_dp[batch_size - 5 - i]
+							+ (float) (Math.pow(discount, 4)) * targets_sel[i + 1];
+				} else {
+					opp_lambda[3] = 0;
+					sel_lambda[3] = 0;
+				}
+
+				if (i < batch_size - 5) {
+					opp_lambda[4] = opp_dp[batch_size - 1 - i] - opp_dp[batch_size - 6 - i]
+							+ (float) (Math.pow(discount, 5)) * targets_opp[i + 1];
+					sel_lambda[4] = sel_dp[batch_size - 1 - i] - sel_dp[batch_size - 6 - i]
+							+ (float) (Math.pow(discount, 5)) * targets_sel[i + 1];
+				} else {
+					opp_lambda[4] = 0;
+					sel_lambda[4] = 0;
+				}
+
+				if (i < batch_size - 6) {
+					opp_lambda[5] = opp_dp[batch_size - 1 - i] - opp_dp[batch_size - 7 - i]
+							+ (float) (Math.pow(discount, 6)) * targets_opp[i + 1];
+					sel_lambda[5] = sel_dp[batch_size - 1 - i] - sel_dp[batch_size - 7 - i]
+							+ (float) (Math.pow(discount, 6)) * targets_sel[i + 1];
+				} else {
+					opp_lambda[5] = 0;
+					sel_lambda[5] = 0;
+				}
+
+				if (i < batch_size - 7) {
+					opp_lambda[6] = opp_dp[batch_size - 1 - i] - opp_dp[batch_size - 8 - i]
+							+ (float) (Math.pow(discount, 7)) * targets_opp[i + 1];
+					sel_lambda[6] = sel_dp[batch_size - 1 - i] - sel_dp[batch_size - 8 - i]
+							+ (float) (Math.pow(discount, 7)) * targets_sel[i + 1];
+				} else {
+					opp_lambda[6] = 0;
+					sel_lambda[6] = 0;
+				}
+
 				for (int j = 0; j < lambda_len; j++) {
 					targets_opp[i] += opp_lambda[j] * Math.pow(lambda, j);
 					targets_sel[i] += sel_lambda[j] * Math.pow(lambda, j);
@@ -224,13 +265,27 @@ public class DeepModel {
 
 			// train repeatedly
 			// for (int i = 0; i < n_epochs; i++) {
-			for (int i = 0; i < 2; i++) {
-				net.setMask(sel_actsND);
-				net.fit(cur_nd, target_sel);
+
+			int divide_key = batch_size - 1;
+			int[] key = new int[divide_key];
+			for (int i = 0; i < divide_key; i++) {
+				key[i] = i + 1;
+			}
+
+			// INDArray divide_sel_actsND = Nd4j.create(new float[0], new int[] { 0 });
+			INDArray divide_sel_actsND = sel_actsND.getRows(key);
+			INDArray divide_opp_sel_actsND = opp_sel_actsND.getRows(key);
+			INDArray divide_cur_nd = cur_nd.getRows(key);
+			INDArray divide_target_sel = target_sel.getRows(key);
+			INDArray divide_target_opp = target_opp.getRows(key);
+
+			for (int i = 0; i < 3; i++) {
+				net.setMask(divide_sel_actsND);
+				net.fit(divide_cur_nd, divide_target_sel);
 				// System.out.println("Loss:" + net.score());
 
-				net.setMask(opp_sel_actsND);
-				net.fit(cur_nd, target_opp);
+				net.setMask(divide_opp_sel_actsND);
+				net.fit(divide_cur_nd, divide_target_opp);
 			}
 			System.out.println("処理時間: " + (System.nanoTime() - startTime) + "ナノ秒");
 		}
