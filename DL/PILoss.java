@@ -95,7 +95,7 @@ public class PILoss implements ILossFunction {
 
 		// everything below remain the same.
 		INDArray dLdPreout;
-		if (false) {
+		if (true) {
 			// dLdPreout = computeNaturalPolicyGradient(p_, inMask, output, piGD);
 			dLdPreout = actFn.backprop(preOutput.dup(), computeNaturalPolicyGradient(p_, inMask, output, piGD))
 					.getFirst();

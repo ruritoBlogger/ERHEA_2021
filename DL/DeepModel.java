@@ -120,7 +120,7 @@ public class DeepModel {
 				System.out.println("Loss:" + net.score());
 			}
 		} else {
-			float discount = 0.99f;
+			float discount = 0.8f;
 			float[] targets_opp = new float[batch_size];
 			float[] targets_sel = new float[batch_size];
 			float[] opp_dp = new float[batch_size + 1];
@@ -128,8 +128,8 @@ public class DeepModel {
 			float reward_sel = 0;
 			float reward_opp = 0;
 
-			float lambda = 0f;
-			int lambda_len = 7;
+			float lambda = 0.6f;
+			int lambda_len = 3;
 
 			float[] opp_lambda = new float[lambda_len];
 			float[] sel_lambda = new float[lambda_len];
